@@ -7,4 +7,9 @@ def test_let_ratio():
     learner = Learner()
     name, value = learner.let_ratio(code)
     assert round(value,5) == round(1/9,5)
-    
+
+def test_get_ratio():
+    code = "include some package"
+    learner = Learner()
+    name, value = learner.get_ratio(code, "include", "include_ratio")
+    assert round(value,5) == round(7/20,5)

@@ -1,5 +1,6 @@
 import os
 import re
+import pandas as pd
 
 """ We want to recognize the following languages:
     Clojure, Haskell, Java, JavaScript,
@@ -26,11 +27,10 @@ LANGUAGE_DICT = {'Clojure': ['.clojure'],
                  'Scheme': ['.scm', '.ss'],
                  'Tcl': ['.tcl']}
 
-def build_training_set():
+def build_train_set(folder_path):
     """ Builds a list of file paths for files with the acceptable extension. """
     training_code = []
-    n = 0
-    for directory, subdirs, files in os.walk("guess_lang/data/"):
+    for directory, subdirs, files in os.walk(folder_path):
         for file in files:
             extension = re.search(r'.(\w+)$',file).group(0)
             if extension and extension in VALID_EXTENSIONS:
@@ -45,6 +45,21 @@ def build_training_set():
                         break
                 training_code.append((filepath,language))
     return training_code
+
+def build_test_set(folder_path):
+    testing_code = []
+    for directory, subdirs, files in os.walk(folder_path):
+        for file in files:
+            filepath = str(directory) + str(file)
+            test_number = int(file)
+            testing_code.append((test_number,filepath))
+    return testing_code
+
+def get_answers(answer_path):
+    df = pd.read_csv(answer_path)
+    df.index = df["Filename"]
+    return df.to_dict()["Language"]
+
 
 if __name__ == '__main__':
 
