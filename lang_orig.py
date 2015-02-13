@@ -1,15 +1,15 @@
 import os
-from sklearn import metrics
-from sklearn.cross_validation import cross_val_score
 import os.path
 import pandas as pd
-import csv
 import nltk
 from textblob import TextBlob as tb
+from sklearn import metrics
+from sklearn.cross_validation import cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.naive_bayes import BernoulliNB
-
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
 
 def read_train_files():
     file_list = []
@@ -126,6 +126,14 @@ new_x
 
 x_train, x_test, y_train, y_test = train_test_split(new_x, datadf['Language'].values, test_size=0.4, random_state=0)
 clf = BernoulliNB()
+clf = clf.fit(x_train, y_train)
+predicted = clf.predict(x_test)
+print(metrics.classification_report(y_test, predicted))
+print(metrics.confusion_matrix(y_test, predicted))
+print(metrics.f1_score(y_test, predicted))
+scores = cross_val_score(clf, new_x,datadf['Language'].values, cv=5)
+
+clf = tree.DecisionTreeClassifier()
 clf = clf.fit(x_train, y_train)
 predicted = clf.predict(x_test)
 print(metrics.classification_report(y_test, predicted))
