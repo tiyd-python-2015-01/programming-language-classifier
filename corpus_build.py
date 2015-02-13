@@ -57,7 +57,14 @@ feature_list = [('parent_count', "[()]"),
                 ('less_minus', "((\<\-))"),
                 ('paren_star', "(\(\*|\*\))"),
                 ('def_exists', r"\bdef\b"),
-                ]
+                ('end_exists', r"\bend\b"),
+                ('curly_bracket', "[\{\}]"),
+                ('slash_star_star', "\/\*\*"),
+                ('forward_slash', "//"),
+                ('var_exists', r"\bvar\b"),
+                ('star_count', r"\b\*\b"),
+                ('dollar_sign', r"\$"),
+                ('val_exists', r"\bval\b")]
 
 
 class Corpus():
