@@ -18,9 +18,9 @@ LANGUAGE_DICT = {'Clojure': ['.clojure'],
                  'JavaScript': ['.js'],
                  'OCaml': ['.ocaml'],
                  'Perl': ['.pl', '.pm', '.t', '.pod', '.perl'],
-                 'PHP': ['.php', '.phtml', 'php3', '.php4', 'php5', 'phps'],
+                 'PHP': ['.php', '.phtml', 'php3', '.php4', '.php5', '.phps'],
                  'Python': ['.py', '.pyw', '.pyc', '.pyo', '.pyd',
-                            '.python', 'python2','python3'],
+                            '.python', '.python2','.python3'],
                  'Ruby': ['.rb', '.rbw', '.ruby', '.jruby'],
                  'Scala': ['.scala'],
                  'Scheme': ['.scm', '.ss'],
@@ -32,11 +32,18 @@ def build_training_set():
     n = 0
     for directory, subdirs, files in os.walk("guess_lang/data/"):
         for file in files:
-
-            extension = re.search(r'.(\w+)$',file)
-            if extension and extension.group(0) in VALID_EXTENSIONS:
+            extension = re.search(r'.(\w+)$',file).group(0)
+            if extension and extension in VALID_EXTENSIONS:
                 filepath = str(directory) + "/" + str(file)
-                training_code.append(filepath)
+                """ It doesn't seem like a best possible practice to use a
+                dictionary like this but I'm leaning towards brevity and space
+                over speed right now. """
+                language = "unknown"
+                for key, values in LANGUAGE_DICT.items():
+                    if extension in values:
+                        language = key
+                        break
+                training_code.append((filepath,language))
     return training_code
 
 if __name__ == '__main__':

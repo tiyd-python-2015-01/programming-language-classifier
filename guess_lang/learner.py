@@ -14,20 +14,28 @@ class Learner:
 
     def __init__(self):
         self.features_df = pd.DataFrame()
-        self.features = [self.dollar_ratio]       # A List of feature functions
+        # A List of feature functions
+        self.features = [self.dollar_ratio, self.semicolon_ratio,self.let_ratio,
+                         self.bracket_ratio]
         # When I initialize the columns of features, run each function with
-        # arguments.  This returns a string representation to use in printing. 
+        # arguments.  This returns a string representation to use in printing.
         for column in self.features:
             self.features_df[column()] = pd.Series(index=self.features_df.index)
 
-    def analyze(self,code_path):
-        code_count = (self.features_df.index)
-        code = open(code_path).read()
-        for feature in self.features:
+    def __str__(self):
+        return str(self.features_df)
 
+    def analyze(self,code_path, language):
+        code_count = len(self.features_df.index)
+        try:
+            code = open(code_path).read()
+        except:
+            print("ERROR: {}".format(code_path))
+            print("{} files read successfully".format(code_count-1))
+        self.features_df.loc[code_count,"class"] = language
+        for feature in self.features:
             column, value = feature(code)
-            #self.features_df[code_count,column] = value
-        print(self.features_df)
+            self.features_df.loc[code_count,column] = value
 
 
     """ Feature Functions:
@@ -41,4 +49,28 @@ class Learner:
         for char in code:
             if char == '$':
                 dollar_count += 1
-        return ("dollar_count", dollar_count/len(code))
+        return ("dollar_ratio", dollar_count/len(code))
+
+    def semicolon_ratio(self,code=None):
+        if code == None:
+            return "semicolon_ratio"
+        semicolon_count = 0
+        for char in code:
+            if char == ';':
+                semicolon_count += 1
+        return ("semicolon_ratio", semicolon_count/len(code))
+
+    def let_ratio(self,code=None):
+        if code == None:
+            return "let_ratio"
+        let_count = len(list(re.finditer(r' (let) ',code)))
+        return ("let_ratio", let_count/len(code))
+
+    def bracket_ratio(self,code=None):
+        if code == None:
+            return "bracket_ratio"
+        bracket_count = 0
+        for char in code:
+            if char == '{':
+                bracket_count += 1
+        return ("bracket_ratio", bracket_count/len(code))
