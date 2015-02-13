@@ -6,16 +6,15 @@ from textblob import TextBlob
 
 prog_langs = {"clojure": [".clj", ".cljs", ".edn", ".clojure"],
              "haskell" : [".hs", ".lhs", ".ghc"],
-             "java": [".java", ".jar"],
+             "java": [".java", ".jar", ".class"],
              "javascript": [".js", ".javascript"],
-             "ocaml": [".ml"],
-             "perl" : [".pl", ".pm", ".t", ".pod"],
+             "ocaml": [".ml", ".ocaml"],
+             "perl" : [".pl", ".pm", ".t", ".pod", ".perl"],
              "php" : [".php", ".phtml", ".php4", ".php3", ".php5", ".phps"],
-             "python" : [".py", ".py", ".pyw", ".pyc", ".pyo", ".pyd", ".python3"],
-             "ruby" : ["rb", ".rbw"],
+             "python" : [".py", ".pyw", ".pyc", ".pyo", ".pyd", ".python3"],
+             #"ruby" : ["rb", ".rbw"],
              "scala" : [".scala"],
              "scheme" : [".scm", ".ss", ".racket"],
-             "tcl" : [".tcl"]
              }
 
 
@@ -26,7 +25,7 @@ extensions = (".clj", ".cljs", ".edn", ".clojure",
              ".php4", ".php3", ".php5", ".phps",
              ".py", ".pyw", ".pyc", ".pyo", ".pyd",
              ".python3", "rb", ".rbw", ".scala",
-             ".scm", ".ss", ".racket", ".tcl")
+             ".scm", ".ss", ".racket", ".perl", ".ocaml")
 
 
 def get_corpus(dir_path):
@@ -36,7 +35,7 @@ def get_corpus(dir_path):
         for name in files:
             if name.endswith((extensions)):
                 ext_list.append(grab_extension(name))
-                with open(os.path.join(subdir, name)) as f:
+                with open(os.path.join(subdir, name), errors="surrogateescape") as f:
                     text_list.append(f.read())
     corpus_df = pd.DataFrame({"Language": ext_list, "Text" : text_list})
     corpus_df["Textblob"] = corpus_df.Text.apply((lambda x: TextBlob(x).words))
