@@ -1,7 +1,10 @@
-import glob
+import pandas as pd
+import numpy as np
+import os
+from textblob import TextBlob
 
 
-prog_lang = {"clojure": [".clj", ".cljs", ".edn", ".clojure"],
+prog_langs = {"clojure": [".clj", ".cljs", ".edn", ".clojure"],
              "haskell" : [".hs", ".lhs", ".ghc"],
              "java": [".java", ".jar"],
              "javascript": [".js", ".javascript"],
@@ -15,6 +18,7 @@ prog_lang = {"clojure": [".clj", ".cljs", ".edn", ".clojure"],
              "tcl" : [".tcl"]
              }
 
+
 extensions = (".clj", ".cljs", ".edn", ".clojure",
              ".hs", ".lhs", ".ghc",".java", ".jar",
              ".js", ".javascript", ".ml", ".pl",
@@ -23,23 +27,25 @@ extensions = (".clj", ".cljs", ".edn", ".clojure",
              ".py", ".pyw", ".pyc", ".pyo", ".pyd",
              ".python3", "rb", ".rbw", ".scala",
              ".scm", ".ss", ".racket", ".tcl")
-import os
-def get_files():
+
+
+def get_corpus(dir_path):
     text_list = []
-    ext_list =
-    for subdir, dirs, files in os.walk("training/benchmarks/benchmarksgame/bench/"):
+    ext_list = []
+    for subdir, dirs, files in os.walk(dir_path):
         for name in files:
             if name.endswith((extensions)):
-
+                ext_list.append(grab_extension(name))
                 with open(os.path.join(subdir, name)) as f:
-                    my_list.append(f.read())
+                    text_list.append(f.read())
+    corpus_df = pd.DataFrame({"Language": ext_list, "Text" : text_list})
+    corpus_df["Textblob"] = corpus_df.Text.apply((lambda x: TextBlob(x).words))
+    corpus_df["Textblob letters"] = corpus_df.Text.apply((lambda x: TextBlob(x)))
+    return corpus_df
 
 
 def grab_extension(file):
-    for lang in prog_land.keys():
-        for ext in prog_land[lang]
+    for lang in prog_langs.keys():
+        for ext in prog_langs[lang]:
             if file.endswith(ext):
                 return lang
-
-
-extensions = tuple(prog_lang.values())
