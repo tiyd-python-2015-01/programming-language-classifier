@@ -1,25 +1,28 @@
 import os
 import re
 import pandas as pd
+from bs4 import BeautifulSoup
 
 """ We want to recognize the following languages:
     Clojure, Haskell, Java, JavaScript,
     OCaml, Perl, PHP, Python,
     Ruby, Scala, Scheme, Tcl """
-VALID_EXTENSIONS = ['.clojure', '.hs', '.lhs', '.java', '.class', '.jar',
-                    '.ghc', '.ocaml', '.pl', '.pm', '.t', '.pod', '.perl',
-                    '.php', '.phtml', 'php3', '.php4', 'php5', 'phps',
-                    '.py', '.pyw', '.pyc', '.pyo', '.pyd', '.python', 'python2', 'python3',
-                    '.rb', '.rbw', '.ruby', '.jruby', '.scala',
-                    '.scm', '.ss', '.tcl']
+VALID_EXTENSIONS = ['.clojure', '.hs', '.lhs', '.ghc', '.java',
+                    '.javascript', '.js', '.class', '.jar', '.ocaml', '.pl',
+                    '.pm', '.t', '.pod', '.perl', '.php',
+                    '.phtml', '.php3', '.php4', '.php5', '.phps',
+                    '.py', '.pyw', '.pyc', '.pyo', '.pyd',
+                    '.python', '.python2', '.python3', '.rb', '.rbw',
+                    '.ruby', '.jruby', '.scala', '.scm', '.ss',
+                    '.tcl']
 
 LANGUAGE_DICT = {'Clojure': ['.clojure'],
                  'Haskell': ['.hs', '.lhs', '.ghc'],
                  'Java': ['.java', '.class', '.jar'],
-                 'JavaScript': ['.js'],
+                 'JavaScript': ['.js','.javascript'],
                  'OCaml': ['.ocaml'],
                  'Perl': ['.pl', '.pm', '.t', '.pod', '.perl'],
-                 'PHP': ['.php', '.phtml', 'php3', '.php4', '.php5', '.phps'],
+                 'PHP': ['.php', '.phtml', '.php3', '.php4', '.php5', '.phps'],
                  'Python': ['.py', '.pyw', '.pyc', '.pyo', '.pyd',
                             '.python', '.python2','.python3'],
                  'Ruby': ['.rb', '.rbw', '.ruby', '.jruby'],

@@ -1,6 +1,7 @@
 import traverse_folders as tf
 from learner import Learner
 from classifier import Classifier
+from sklearn.cluster import KMeans
 
 
 
@@ -28,7 +29,7 @@ if __name__ == '__main__':
         decision = classifier.decision_tree(analysis)[0].lower()
         if decision == (answers[test_number]):
             correct += 1
-        print(test_number, ": ", decision)
+        #print(test_number, ": ", decision)
     print("Score: {}".format(correct/32))
 
 
@@ -39,5 +40,35 @@ if __name__ == '__main__':
         decision = classifier.random_forest(analysis)[0].lower()
         if decision == (answers[test_number]):
             correct += 1
-        print(test_number, ": ", decision)
+        print(test_number, ": ", decision, "\tCorrect: ",answers[test_number])
     print("Score: {}".format(correct/32))
+
+    print("Extremely Random Forest")
+    correct = 0
+    for test_number,test in testing_set:
+        analysis = learner.analyze(test)
+        decision = classifier.extreme_random_forest(analysis)[0].lower()
+        if decision == (answers[test_number]):
+            correct += 1
+        print(test_number, ": ", decision, "\tCorrect: ",answers[test_number])
+    print("Score: {}".format(correct/32))
+
+    print("Linear SVC")
+    correct = 0
+    for test_number,test in testing_set:
+        analysis = learner.analyze(test)
+        decision = classifier.linear_svc(analysis)[0].lower()
+        if decision == (answers[test_number]):
+            correct += 1
+        #print(test_number, ": ", decision)
+    print("Score: {}".format(correct/32))
+
+    # print("Cluster")
+    # correct = 0
+    # for test_number,test in testing_set:
+    #     analysis = learner.analyze(test)
+    #     decision = classifier.cluster(analysis)[0]
+    #     if decision == (answers[test_number]):
+    #         correct += 1
+    #     #print(test_number, ": ", decision)
+    # print("Score: {}".format(correct/32))
