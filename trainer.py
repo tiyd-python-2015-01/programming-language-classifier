@@ -5,6 +5,7 @@ from sklearn.cross_validation import cross_val_score, train_test_split
 from sklearn.metrics import (classification_report, f1_score, accuracy_score,
                              confusion_matrix)
 from sklearn.ensemble import RandomForestClassifier
+import pickle
 import parser
 
 
@@ -26,7 +27,7 @@ def create_training_data():
             training_results.append(filetype_list.index(filetype))
             training_data.append(parser.parse_and_score(data_directory + file))
 
-    return training_data, training_results
+    return training_data, training_results, filetype_list
 
 
 def create_filetype_dict():
@@ -63,9 +64,16 @@ def test_learner(learner, test_data, test_results):
     print(f1_score(test_results, prediction))
 
 if __name__ == '__main__':
-    data, results = create_training_data()
+    data, results, key = create_training_data()
     train_data, test_data, train_results, test_results = split_data(data,
                                                                     results,
                                                                     0.2)
     trained_forest = train_learner(train_data, train_results)
     test_learner(trained_forest, test_data, test_results)
+
+    max_train = train_learner(data, results)
+    with open("random_forest.dat", "wb") as file:
+        pickle.dump(max_train, file)
+    with open("key.txt", "w") as file:
+        for item in key:
+            file.write(item + "\n")
