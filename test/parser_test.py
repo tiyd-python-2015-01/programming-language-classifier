@@ -63,3 +63,21 @@ def test_strip_inline_comments():
     text = ["code // comment"]
     new_text = parser.strip_inline_comments(3, text)
     assert new_text == ["code "]
+
+
+def test_identify_print_style():
+    text = ["puts 'ths'"]
+    print_type = parser.identify_print_style(text)
+    assert print_type == 0
+
+    text = ["println 'ths'"]
+    print_type = parser.identify_print_style(text)
+    assert print_type == 1
+
+    text = ["printf 'ths'"]
+    print_type = parser.identify_print_style(text)
+    assert print_type == 2
+
+    text = ["print 'ths'"]
+    print_type = parser.identify_print_style(text)
+    assert print_type == 3
