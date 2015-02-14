@@ -16,5 +16,5 @@ def string_finder(string, code):
     return value
 
 def string_ratio(string, code):
-    value = string_ratio(string, code)/len(code)
+    value = string_finder(string, code)/len(code)
     return value
