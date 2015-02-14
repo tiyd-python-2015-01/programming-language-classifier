@@ -1,4 +1,6 @@
 import re
+import numpy as np
+
 
 """The Parser module will provide methods for parsing information from a
 string representing a source code document, as well as a method for reading
@@ -52,11 +54,12 @@ def strip_comments(c_type, source_lines):
         items_to_remove.extend(identify_comment_blocks(c_type, source_lines))
     if c_type == 0:
         c_type = 3
-    for line in source_lines:
-        if re.match(comment_types[c_type], line):
-            items_to_remove.append(line)
-    stripped_source_lines = remove_items(items_to_remove, source_lines)
+    if c_type >= 3:
+        for line in source_lines:
+            if re.match(comment_types[c_type], line):
+                items_to_remove.append(line)
 
+    stripped_source_lines = remove_items(items_to_remove, source_lines)
     if c_type >= 3:
         stripped_source_lines = strip_inline_comments(c_type,
                                                       stripped_source_lines)
@@ -65,7 +68,10 @@ def strip_comments(c_type, source_lines):
 
 def remove_items(items, source_lines):
     for item in items:
-        source_lines.remove(item)
+        try:
+            source_lines.remove(item)
+        except ValueError:
+            continue
     return source_lines
 
 
@@ -117,6 +123,12 @@ def count_double_colons(source_list, length_of_source):
     return total_count / length_of_source
 
 
+def count_semi_colons(source_list, length_of_source):
+    source_text = "\n".join(source_list)
+    total_count = source_text.count(";")
+    return total_count / length_of_source
+
+
 def count_dollar_signs(source_list, length_of_source):
     source_text = "\n".join(source_list)
     total_count = source_text.count("$")
@@ -136,15 +148,21 @@ def count_pipes(source_list, length_of_source):
 
 
 def count_percent_signs(source_list, length_of_source):
-        source_text = "\n".join(source_list)
-        total_count = source_text.count("%")
-        return total_count / length_of_source
+    source_text = "\n".join(source_list)
+    total_count = source_text.count("%")
+    return total_count / length_of_source
 
 
 def count_at_symbols(source_list, length_of_source):
-        source_text = "\n".join(source_list)
-        total_count = source_text.count("@")
-        return total_count / length_of_source
+    source_text = "\n".join(source_list)
+    total_count = source_text.count("@")
+    return total_count / length_of_source
+
+
+def count_double_period(source_list, length_of_source):
+    source_text = "\n".join(source_list)
+    total_count = source_text.count("..")
+    return total_count / length_of_source
 
 
 def check_double_plus_minus(source_list):
@@ -163,6 +181,21 @@ def check_colon_equals(source_list):
         return 0
 
 
+def check_dash_arrow(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("->") > -1:
+        return 1
+    else:
+        return 0
+
+
+def check_reverse_dash_arrow(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("<-") > -1:
+        return 1
+    else:
+        return 0
+
 def check_equals_arrow(source_list):
     source_text = "\n".join(source_list)
     if source_text.find("=>") > -1:
@@ -171,13 +204,29 @@ def check_equals_arrow(source_list):
         return 0
 
 
+def check_for_function(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("function") > -1:
+        return 1
+    else:
+        return 0
+
+
+def check_for_public(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("public") > -1:
+        return 1
+    else:
+        return 0
+
+        
 def parse_and_score(file_location):
     scores = []
     source_text = read_file(file_location)
     source_length = count_characters(source_text)
     listed_source_text = split_into_lines(source_text)
     comment_style = identify_comment_type(listed_source_text)
-    listed_source_text = strip_comments(listed_source_text)
+    listed_source_text = strip_comments(comment_style, listed_source_text)
     print_style = identify_print_style(listed_source_text)
 
     parentheses_proportion = count_parentheses(listed_source_text,
@@ -195,9 +244,15 @@ def parse_and_score(file_location):
     percent_sign_proportion = count_percent_signs(listed_source_text,
                                                   source_length)
     at_symbol_proportion = count_at_symbols(listed_source_text, source_length)
+    double_period_proportion = count_double_period(listed_source_text,
+                                                   source_length)
     contains_double_plus_minus = check_double_plus_minus(listed_source_text)
     contains_colon_equals = check_colon_equals(listed_source_text)
+    contains_dash_arrow = check_equals_arrow(listed_source_text)
+    contains_reverse_dash_arrow = check_reverse_dash_arrow(listed_source_text)
     contains_equals_arrow = check_equals_arrow(listed_source_text)
+    contains_word_function = check_for_function(listed_source_text)
+    contains_word_public = check_for_public(listed_source_text)
 
     scores.append(comment_style)
     scores.append(print_style)
@@ -211,5 +266,12 @@ def parse_and_score(file_location):
     scores.append(percent_sign_proportion)
     scores.append(at_symbol_proportion)
     scores.append(contains_double_plus_minus)
+    scores.append(double_period_proportion)
     scores.append(contains_colon_equals)
-    scores.append(check_equals_arrow)
+    scores.append(contains_dash_arrow)
+    scores.append(contains_reverse_dash_arrow)
+    scores.append(contains_equals_arrow)
+    scores.append(contains_word_function)
+    scores.append(contains_word_public)
+
+    return np.array(scores)
