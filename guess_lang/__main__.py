@@ -100,7 +100,8 @@ if __name__ == '__main__':
             correct_string = "Correct!"
             correct += 1
         else:
-            correct_string = "Incorrect: {}".format(answers[test_number])
+            correct_string = ("Incorrect: {}"
+            .format(answers[test_number].title()))
         if single_file:
             print(test_number, ": ", decision.title())
         else:
