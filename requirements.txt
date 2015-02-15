@@ -1,2 +1,8 @@
-scikit-learn
+os
+os.path
+pickle
+pandas
+nltk
+re
 textblob
+scikit-learn
