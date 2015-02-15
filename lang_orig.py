@@ -57,7 +57,7 @@ def get_language(ext):
     return None
 
 def read_train_data():
-    files = read_files("./train/bench")
+    files = read_files("./rosetta")
     main_list = []
     for file in files:
         ext = get_extension(file)
@@ -151,17 +151,6 @@ def create_vectors(final,data):
         for word, score in final.items():
             if row['Code'].find(word) != -1:
                 mydict[word] = score
-        super_final.append(mydict)
-    vec = DictVectorizer()
-    return vec.fit_transform(super_final).toarray()
-
-def create_vectors1(final,data):
-    super_final = []
-    for ind, row in data.iterrows():
-        mydict = {}
-        for word, score in final.items():
-            if row['Code'].find(word) != -1:
-                mydict[word] = score
             else:
                 mydict[word] = 0
         super_final.append(mydict)
@@ -188,36 +177,36 @@ def test_new_models(data, final_words, clf):
     token_blob = return_tokenized_data(data)
     word_list = calculate_scores(token_blob)
     final = select_features_new_test(word_list, final_words)
-    print('elemfinal',final)
-    print('final_words',final_words)
-    #vec = DictVectorizer()
-    #new_x =  vec.fit_transform(final).toarray()
-
-    new_x =  create_vectors1(final,data)
-    print('subzero',len(new_x[0]))
-    print('new',new_x)
+    new_x =  create_vectors(final,data)
     predicted = clf.predict(new_x)
     for pp in range(len(predicted)):
         print('predicted',predicted[pp],new_target[pp])
-    print(new_target)
 
-    #print(metrics.classification_report(new_target, predicted))
-    #print(metrics.f1_score(new_target, predicted))
-    #scores = cross_val_score(clf, new_x, new_target)
+
+def test_model(x,y,model):
+    if model == 'tree':
+        clf = tree.DecisionTreeClassifier()
+    elif model == 'bernoulli':
+        clf = BernoulliNB()
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=0)
+    clf = clf.fit(x_train, y_train)
+    predicted = clf.predict(x_test)
+    print('predicted',predicted)
+    print(metrics.classification_report(y_test, predicted))
+    print(metrics.f1_score(y_test, predicted))
+    scores = cross_val_score(clf, x, y, cv=5)
+    return scores, clf
+
 
 if __name__ == '__main__':
     datadf = read_train_data()
     target = datadf['Language'].values
+    print(datadf.groupby('Language').count())
     read_test_data()
     token_blob = return_tokenized_data(datadf)
     word_list = calculate_scores(token_blob)
-    #print(word_list)
     final_words = select_features(word_list)
-    print("final wordsoriginal", final_words)
     new_x = create_vectors(final_words,datadf)
-    print('subzeroorig',len(new_x[0]))
-    print("newxorig",new_x)
-    #print(final_words)
     bernoulli_score = test_model(new_x, target, 'bernoulli')
     tree_score, clf_model = test_model(new_x, target, 'tree')
     test_data = read_test_data()
