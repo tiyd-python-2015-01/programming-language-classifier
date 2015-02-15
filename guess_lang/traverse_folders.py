@@ -53,6 +53,9 @@ def build_train_set(folder_path):
 
 
 def build_test_set(folder_path):
+    """ Test set is a list of tuples, test_number is the file's number,
+        filepath is the path.  If user input a specified file, just return
+        with test_number == 1. """
     testing_code = []
     if os.path.isfile(folder_path):
         return [(1, folder_path)]
@@ -65,12 +68,13 @@ def build_test_set(folder_path):
 
 
 def get_answers(answer_path):
+    """ Reads the test.csv for accuracy feedback. """
     df = pd.read_csv(answer_path)
     df.index = df["Filename"]
     return df.to_dict()["Language"]
 
 
 if __name__ == '__main__':
-
+    """ Check for build_training_set(). """
     files = build_training_set()
     print(files)

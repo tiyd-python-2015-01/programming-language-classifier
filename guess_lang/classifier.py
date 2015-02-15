@@ -15,60 +15,65 @@ LANGUAGES = ['Clojure', 'Haskell', 'Java', 'JavaScript', 'OCaml',
 class Classifier:
 
     def __init__(self, training_df):
+        """ Uses the training data and builds a dataFrame for the test files.
+        Classifiers are attributes of this class so that they can be saved
+        through pickling.  We don't need to save the actual classifiers,
+        only the results of each classifier's fit() method. """
         self.training_df = training_df
         self.testing_df = pd.DataFrame()
-        self.tree = 0
-        self.dt_classifier = 0
-        self.forest = 0
-        self.rf_classifier = 0
-        self.extra_trees = 0
-        self.et_classifier = 0
-        self.linear_svc = 0
-        self.lsvc_classifier = 0
-        self.cluster = 0
-        self.cl_classifier = 0
+        self.dt_fit = None
+        self.rf_fit = None
+        self.et_fit = None
+        self.lsvc_fit = None
+        self.cl_fit = None
 
     def __str__(self):
         return str(self.testing_df)
 
+    """ Each classification method is roughly the same.
+    If a fit() attribute has not been loaded through pickling, build a new
+    classifier, give it the features (all but the last column) and
+    the class (the last column). Perform a fit()
+    Make and return a prediction, given the testframe. """
+
     def decision_tree(self, testframe):
         code_count = len(self.testing_df.index)
-        if self.tree == 0:
-            self.tree = DecisionTreeClassifier()
+        if not self.dt_fit:
+            tree = DecisionTreeClassifier()
             features = self.training_df.ix[:, :-1]
             classes = self.training_df.ix[:, -1]
-            self.dt_classifier = self.tree.fit(features, classes)
-        prediction = self.dt_classifier.predict(testframe)
+            self.dt_fit = tree.fit(features, classes)
+        prediction = self.dt_fit.predict(testframe)
         return prediction
 
     def random_forest(self, testframe):
         code_count = len(self.testing_df.index)
-        if self.forest == 0:
-            self.forest = RandomForestClassifier(max_features='auto')
+        if not self.rf_fit:
+            forest = RandomForestClassifier(max_features='auto')
             features = self.training_df.ix[:, :-1]
             classes = self.training_df.ix[:, -1]
-            self.rf_classifier = self.forest.fit(features, classes)
-        prediction = self.rf_classifier.predict(testframe)
+            self.rf_fit = forest.fit(features, classes)
+        prediction = self.rf_fit.predict(testframe)
         return prediction
 
     def extreme_random_forest(self, testframe):
         code_count = len(self.testing_df.index)
-        if self.extra_trees == 0:
-            self.extra_trees = ExtraTreesClassifier(max_features='sqrt')
+        if not self.et_fit:
+            extra_trees = ExtraTreesClassifier(max_features='sqrt')
             features = self.training_df.ix[:, :-1]
             classes = self.training_df.ix[:, -1]
-            self.et_classifier = self.extra_trees.fit(features, classes)
-        prediction = self.et_classifier.predict(testframe)
+            self.et_fit = extra_trees.fit(features, classes)
+        prediction = self.et_fit.predict(testframe)
         return prediction
 
     def linear_svc(self, testframe):
         code_count = len(self.testing_df.index)
-        if self.linear_svc == 0:
-            self.linear_svc = LinearSVC(loss='l1')
+        if not self.lsvc_fit:
+            linear_svc = LinearSVC(loss='l1')
             features = self.training_df.ix[:, :-1]
             classes = self.training_df.ix[:, -1]
-            self.lsvc_classifier = self.linear_svc.fit(features, classes)
-        prediction = classifier.predict(testframe)
+            self.lsvc_fit = linear_svc.fit(features, classes)
+        prediction = self.lsvc_fit.predict(testframe)
         return prediction
 
     def cluster(self, testframe):
