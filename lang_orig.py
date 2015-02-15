@@ -10,7 +10,6 @@ from sklearn.cross_validation import cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.naive_bayes import BernoulliNB
-from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
@@ -57,18 +56,19 @@ def get_language(ext):
         return "Tcl"
     return None
 
+
 def read_train_data():
     files = read_files("./rosetta")
     main_list = []
     for file in files:
         ext = get_extension(file)
         lang = get_language(ext)
-        if lang != None:
+        if lang is not None:
             file_lang = []
             with open(file, errors="surrogateescape") as in_file:
                 texto = in_file.read()
             main_list.append([texto, lang])
-    datadf = pd.DataFrame(main_list, columns = ['Code', 'Language'])
+    datadf = pd.DataFrame(main_list, columns=['Code', 'Language'])
     return datadf
 
 
@@ -96,25 +96,25 @@ def return_tokenized_data(datadf):
 
 
 def calculate_scores(token_blob):
-    scores = {word: word_freq(word,token_blob) for word in token_blob.words}
+    scores = {word: word_freq(word, token_blob)
+              for word in token_blob.words}
     return sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
 
 def select_features(word_list):
-    exclude_list = ['l','6','d','x1','x2','5','j','m','w','i','e','g','4','v','n','0','1','a','x','n','y','b','2','c','s','3']
-    final={}
+    exclude_list = ['l', '6', 'd', 'x1', 'x2', '5', 'j', 'm', 'w', 'i', 'e', 'g', '4', 'v', 'n', '0', '1', 'a', 'x', 'n', 'y', 'b', '2', 'c', 's', '3']
+    final = {}
     counter = 0
     for word, score in word_list:
         if word not in exclude_list:
-           final[word] = round(score,5)
+            final[word] = round(score, 5)
         counter += 1
         if counter == 160:
             break
-    print("features#", len(final))
     return final
 
 
-def create_vectors(final,data):
+def create_vectors(final, data):
     super_final = []
     for ind, row in data.iterrows():
         mydict = {}
@@ -127,7 +127,8 @@ def create_vectors(final,data):
     vec = DictVectorizer()
     return vec.fit_transform(super_final).toarray()
 
-def test_model(x,y,model):
+
+def test_model(x, y, model):
     if model == 'tree':
         clf = tree.DecisionTreeClassifier()
     elif model == 'bernoulli':
@@ -135,22 +136,6 @@ def test_model(x,y,model):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=0)
     clf = clf.fit(x_train, y_train)
     predicted = clf.predict(x_test)
-    print('predicted',predicted)
-    print(metrics.classification_report(y_test, predicted))
-    print(metrics.f1_score(y_test, predicted))
-    scores = cross_val_score(clf, x, y, cv=5)
-    return scores, clf
-
-
-def test_model(x,y,model):
-    if model == 'tree':
-        clf = tree.DecisionTreeClassifier()
-    elif model == 'bernoulli':
-        clf = BernoulliNB()
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=0)
-    clf = clf.fit(x_train, y_train)
-    predicted = clf.predict(x_test)
-    #print('predicted',predicted)
     print(metrics.classification_report(y_test, predicted))
     print(metrics.f1_score(y_test, predicted))
     scores = cross_val_score(clf, x, y, cv=5)
@@ -163,9 +148,8 @@ if __name__ == '__main__':
     token_blob = return_tokenized_data(datadf)
     word_list = calculate_scores(token_blob)
     final_words = select_features(word_list)
-    #print("word_list for model", final_words)
-    new_x = create_vectors(final_words,datadf)
+    new_x = create_vectors(final_words, datadf)
     bernoulli_score = test_model(new_x, target, 'bernoulli')
     tree_score, clf_model = test_model(new_x, target, 'tree')
-    pickle.dump( clf_model, open( "model.p", "wb" ) )
-    pickle.dump( final_words, open( "features.p", "wb" ) )
+    pickle.dump(clf_model, open("model.p", "wb"))
+    pickle.dump(final_words, open("features.p", "wb"))
