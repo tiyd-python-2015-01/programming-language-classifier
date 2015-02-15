@@ -64,23 +64,27 @@ if __name__ == '__main__':
     #     decision = classifier.decision_tree(analysis)[0].lower()
     #     if decision == (answers[test_number]):
     #         correct += 1
-    #     #print(test_number, ": ", decision)
+    #     if single_file:
+    #         print(test_number, ": ", decision)
+    #     else:
+    #         print(test_number, ": ", decision,
+    #               "\tCorrect: ", answers[test_number])
     # print("Score: {}".format(correct/32))
 
-    print("Random Forest")
-    correct = 0
-    for test_number, test in testing_set:
-        analysis = learner.analyze(test)
-        decision = classifier.random_forest(analysis)[0].lower()
-        if decision == (answers[test_number]):
-            correct += 1
-        if single_file:
-            print(test_number, ": ", decision)
-        else:
-            print(test_number, ": ", decision,
-                  "\tCorrect: ", answers[test_number])
-    if not single_file:
-        print("Score: {}".format(correct/32))
+    # print("Random Forest")
+    # correct = 0
+    # for test_number, test in testing_set:
+    #     analysis = learner.analyze(test)
+    #     decision = classifier.random_forest(analysis)[0].lower()
+    #     if decision == (answers[test_number]):
+    #         correct += 1
+    #     if single_file:
+    #         print(test_number, ": ", decision)
+    #     else:
+    #         print(test_number, ": ", decision,
+    #               "\tCorrect: ", answers[test_number])
+    # if not single_file:
+    #     print("Score: {}".format(correct/32))
 
     print("Extremely Random Forest")
     correct = 0

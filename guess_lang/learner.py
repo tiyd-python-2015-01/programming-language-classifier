@@ -77,4 +77,4 @@ class Learner:
         regex = r'(' + snip + r')'
         count = len(list(re.finditer(regex, code, re.MULTILINE)))
         # *2 makes longer regex weigh more
-        return (title, (len(snip)*count*2)/len(code))
+        return (title, (len(snip)*count*4)/len(code))

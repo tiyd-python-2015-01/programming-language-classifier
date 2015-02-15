@@ -49,7 +49,9 @@ class Classifier:
     def random_forest(self, testframe):
         code_count = len(self.testing_df.index)
         if not self.rf_fit:
-            forest = RandomForestClassifier(max_features='auto')
+            forest = RandomForestClassifier(n_estimators=15,
+                                            criterion='gini',
+                                            max_features=None)
             features = self.training_df.ix[:, :-1]
             classes = self.training_df.ix[:, -1]
             self.rf_fit = forest.fit(features, classes)
@@ -59,7 +61,9 @@ class Classifier:
     def extreme_random_forest(self, testframe):
         code_count = len(self.testing_df.index)
         if not self.et_fit:
-            extra_trees = ExtraTreesClassifier(max_features='sqrt')
+            extra_trees = ExtraTreesClassifier(n_estimators=15,
+                                               criterion='gini',
+                                               max_features=None)
             features = self.training_df.ix[:, :-1]
             classes = self.training_df.ix[:, -1]
             self.et_fit = extra_trees.fit(features, classes)
