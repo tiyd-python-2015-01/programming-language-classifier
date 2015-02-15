@@ -196,6 +196,7 @@ def check_reverse_dash_arrow(source_list):
     else:
         return 0
 
+
 def check_equals_arrow(source_list):
     source_text = "\n".join(source_list)
     if source_text.find("=>") > -1:
@@ -219,16 +220,16 @@ def check_for_public(source_list):
     else:
         return 0
 
-        
+
 def parse_and_score(file_location):
     scores = []
     source_text = read_file(file_location)
     source_length = count_characters(source_text)
     listed_source_text = split_into_lines(source_text)
+
     comment_style = identify_comment_type(listed_source_text)
     listed_source_text = strip_comments(comment_style, listed_source_text)
     print_style = identify_print_style(listed_source_text)
-
     parentheses_proportion = count_parentheses(listed_source_text,
                                                source_length)
     curly_brace_proportion = count_braces(listed_source_text, source_length)

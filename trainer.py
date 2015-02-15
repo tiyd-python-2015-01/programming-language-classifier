@@ -14,20 +14,19 @@ def create_training_data():
 
     filetype_dict = create_filetype_dict()
     filetype_list = list(set(value for key, value in filetype_dict.items()))
-    print(filetype_list)
     training_data = []
     training_results = []
 
     for file in os.listdir(data_directory):
-        fileext = re.findall(r"\w+\.(\w+)", file)
+        fileext = re.findall(r"\w+\.?\w+?\.(\w+)", file)
         if fileext:
             if fileext[0] == "txt":
                 continue
             filetype = filetype_dict[fileext[0]]
-            training_results.append(filetype_list.index(filetype))
+            training_results.append(filetype)
             training_data.append(parser.parse_and_score(data_directory + file))
 
-    return training_data, training_results, filetype_list
+    return training_data, training_results
 
 
 def create_filetype_dict():
@@ -63,8 +62,14 @@ def test_learner(learner, test_data, test_results):
     print(confusion_matrix(test_results, prediction))
     print(f1_score(test_results, prediction))
 
+
+def export_forest(forest):
+    with open("random_forest.dat", "wb") as file:
+        pickle.dump(max_train, file)
+
+
 if __name__ == '__main__':
-    data, results, key = create_training_data()
+    data, results = create_training_data()
     train_data, test_data, train_results, test_results = split_data(data,
                                                                     results,
                                                                     0.2)
@@ -72,8 +77,4 @@ if __name__ == '__main__':
     test_learner(trained_forest, test_data, test_results)
 
     max_train = train_learner(data, results)
-    with open("random_forest.dat", "wb") as file:
-        pickle.dump(max_train, file)
-    with open("key.txt", "w") as file:
-        for item in key:
-            file.write(item + "\n")
+    export_forest(max_train)
