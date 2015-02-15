@@ -7,7 +7,8 @@ import pickle
 
 
 if __name__ == '__main__':
-    loaded_predic = cPickle.load(open('sms_spam_detector.pkl'))
+    file = open("language_detector.pkl",'rb')
+    classifier = pickle.load(file)
     test_df = get_tests('test')
     add_to_df(test_df)
     predictions = classifier.predict(test_df.loc[0::,'Object':"php"])
