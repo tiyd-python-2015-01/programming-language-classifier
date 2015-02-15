@@ -18,3 +18,9 @@ def string_finder(string, code):
 def string_ratio(string, code):
     value = string_finder(string, code)/len(code)
     return value
+
+def string_end(string, code):
+    if code.endswith(string):
+        return 10
+    else:
+        return 0

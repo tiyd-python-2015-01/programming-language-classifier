@@ -19,3 +19,8 @@ def test_string_finder():
                     max_depth = max (min_depth + 2) nlet stretch_depth =
                     max_depth + 1""")
     assert string_finder("let", test2code) == 4
+
+def test_string_end():
+    test3code = "boring test string()"
+    assert string_end("ing()", test3code) == 10
+    assert string_end("monkey", test3code) == 0
