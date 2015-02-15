@@ -15,11 +15,14 @@ class Learner:
         self.training_df = pd.DataFrame()
         # A List of feature functions
 
-        self.features = ['\$', '[^;];[\s]', 'let', '{', ';;', 'defn', 'include',
-                        'import', 'var', '@', '#', '=>', 'js', '/\*', '->',
-                        'type', 'final', '"""', 'def ','<!','my','::','__name__',
-                        '__init__','=begin','puts', '===', 'clojure',
-                        '[^/]\*','haskell','__str__','\(function\(']
+        self.features = [r'\$[\D]', r'[^;];[^.]', r';;[^;]', r';;;',
+                         r'include', r'let', r'{[^-]', r'{-',
+                         r'import', r'var', r'@', r'#', r'=>', r'js\.', r'/\*',
+                         r'->', '\(\*', r'|[^|]', r'& args', r'<?php'
+                         r'type', r'final', r'"""', r'<!', r'my', r'::',
+                         r'__name__', r'defn ', r'def ',
+                         r'__init__', r'=begin', r'puts', r'===', r'clojure\.',
+                         r'[^/]\*', r'haskell', r'__str__', r'\(function[ ]?\(']
         # When I initialize the columns of features, run each function with
         # arguments.  This returns a string representation to use in printing.
         for column in self.features:
@@ -62,5 +65,5 @@ class Learner:
             return title
         #regex = r'('+re.escape(snip)+r')'
         regex = r'(' + snip + r')'
-        count = len(list(re.finditer(regex, code)))
+        count = len(list(re.finditer(regex, code, re.MULTILINE)))
         return (title, (len(snip)*count)/len(code))

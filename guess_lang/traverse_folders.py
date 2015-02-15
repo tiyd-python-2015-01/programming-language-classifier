@@ -51,6 +51,8 @@ def build_train_set(folder_path):
 
 def build_test_set(folder_path):
     testing_code = []
+    if os.path.isfile(folder_path):
+        return [(1, folder_path)]
     for directory, subdirs, files in os.walk(folder_path):
         for file in files:
             filepath = str(directory) + str(file)
