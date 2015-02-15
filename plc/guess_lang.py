@@ -8,6 +8,11 @@ import os
 import pandas as pd
 import re
 import random
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("filename")
+args = parser.parse_args()
 
 word_list = ['let', 'end', 'defn', 'function', 'fun', 'return', 'def', 'return', 'check', 'make', '->', '.format',
              'define', '::', 'done', 'type', 'rescue', 'print', 'elif', 'clone', 'display', '$format', 'echo', 'str',
@@ -42,7 +47,7 @@ def data_frame_generator():
 
 def x_data_frame_generator():
     test_list = []
-    with open("code_snippet.txt") as test_file:
+    with open(args.filename) as test_file:
         test_list.append(test_file.read())
     df = pd.DataFrame(test_list, index=range(1), columns=['Code'])
     for string in word_list:
