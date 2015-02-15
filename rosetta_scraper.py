@@ -5,7 +5,7 @@ r = requests.get('http://rosettacode.org/wiki/Category:Programming_Tasks')
 
 soup = BeautifulSoup(r.content)
 
-languages = [("Haskell","hs")
+languages = [("Haskell","hs"),
              ("Clojure","clojure"),
              ("Java","java"),
              ("JavaScript","js"),
@@ -41,4 +41,3 @@ for lang, ext in languages:
             pass
         if i ==61:
             break
-        
