@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-
+import sys
 
 def page_scraper(scrape_page, name_of_file):
     lang_dict = {"clojure": ".clojure", "haskell" : ".hs", "java": ".java",
@@ -12,7 +12,7 @@ def page_scraper(scrape_page, name_of_file):
     start_soup = BeautifulSoup(page.text)
     for lang in lang_dict.keys():
         lang_class = "pre", {"class" : lang + " highlighted_source"}
-        lang_with_html = BeautifulSoup(str(lang_class)))
+        lang_with_html = BeautifulSoup(str(start_soup(lang_class)))
         code_text = lang_with_html.get_text()
         code_text = ("").join(code_text)
         if code_text == "[]":
@@ -22,3 +22,8 @@ def page_scraper(scrape_page, name_of_file):
             temp_file = open(file_dir + name_of_file + lang_dict[lang], "+w")
             temp_file.write(parse_text)
             temp_file.close()
+
+if __name__ == "__main__":
+    page = sys.argv[1]
+    file = sys.argv[2]
+    page_scraper(page, file)
