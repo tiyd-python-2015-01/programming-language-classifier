@@ -22,7 +22,7 @@ class Learner:
                          r'__name__', r'defn ', r'def ',
                          r'__init__', r'=begin', r'puts', r'===', r'clojure\.',
                          r'[^/]\*', r'haskell', r'__str__',
-                         r'\(function[ ]?\(']
+                         r'\(function[ ]?\(', '\*[\w]']
         """ When I initialize the columns of features, run each function with
             arguments.  This returns a string representation to use in
             printing.

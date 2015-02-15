@@ -7,6 +7,11 @@ from classifier import Classifier
 from sklearn.cluster import KMeans
 
 
+class Language_Guesser:
+
+    def __init__(self):
+        pass
+
 if __name__ == '__main__':
     training_path = "guess_lang/data/"
     testing_path = "guess_lang/test/"
@@ -86,18 +91,22 @@ if __name__ == '__main__':
     # if not single_file:
     #     print("Score: {}".format(correct/32))
 
-    print("Extremely Random Forest")
+    print("Extra Trees Random Forest")
     correct = 0
     for test_number, test in testing_set:
         analysis = learner.analyze(test)
         decision = classifier.extreme_random_forest(analysis)[0].lower()
         if decision == (answers[test_number]):
+            correct_string = "Correct!"
             correct += 1
-        if single_file:
-            print(test_number, ": ", decision)
         else:
-            print(test_number, ": ", decision,
-                  "\tCorrect: ", answers[test_number])
+            correct_string = "Incorrect: {}".format(answers[test_number])
+        if single_file:
+            print(test_number, ": ", decision.title())
+        else:
+            print(str.zfill(str(test_number), 2), ": ",
+                  str.rjust(decision.title(), 10),
+                  "\t", correct_string)
     if not single_file:
         print("Score: {}".format(correct/32))
 
