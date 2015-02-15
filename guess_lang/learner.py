@@ -22,27 +22,28 @@ class Learner:
                          r'type', r'final', r'"""', r'<!', r'my', r'::',
                          r'__name__', r'defn ', r'def ',
                          r'__init__', r'=begin', r'puts', r'===', r'clojure\.',
-                         r'[^/]\*', r'haskell', r'__str__', r'\(function[ ]?\(']
+                         r'[^/]\*', r'haskell', r'__str__',
+                         r'\(function[ ]?\(']
         # When I initialize the columns of features, run each function with
         # arguments.  This returns a string representation to use in printing.
         for column in self.features:
             self.training_df[self.get_ratio(snip=column)] = \
-                                        pd.Series(index=self.training_df.index)
+                pd.Series(index=self.training_df.index)
 
     def __str__(self):
         return str(self.training_df)
 
-    def train(self,code_path, language):
+    def train(self, code_path, language):
         code_count = len(self.training_df.index)
         try:
             code = open(code_path).read()
         except:
             print("ERROR in training: {}".format(code_path))
             print("{} files read successfully".format(code_count-1))
-        self.training_df.loc[code_count,"class"] = language
+        self.training_df.loc[code_count, "class"] = language
         for feature in self.features:
-            column, value = self.get_ratio(code=code,snip=feature)
-            self.training_df.loc[code_count,column] = value
+            column, value = self.get_ratio(code=code, snip=feature)
+            self.training_df.loc[code_count, column] = value
 
     def analyze(self, code_path):
         try:
@@ -51,8 +52,8 @@ class Learner:
             print("ERROR in testing: {}".format(code_path))
         analysis = pd.DataFrame()
         for feature in self.features:
-            column, value = self.get_ratio(code=code,snip=feature)
-            analysis.loc[0,column] = value
+            column, value = self.get_ratio(code=code, snip=feature)
+            analysis.loc[0, column] = value
         return analysis
 
     """ Feature Functions:
@@ -61,9 +62,9 @@ class Learner:
 
     def get_ratio(self, code=None, snip=None):
         title = "{}_ratio".format(snip)
-        if code == None:
+        if code is None:
             return title
-        #regex = r'('+re.escape(snip)+r')'
+        # regex = r'('+re.escape(snip)+r')'
         regex = r'(' + snip + r')'
         count = len(list(re.finditer(regex, code, re.MULTILINE)))
         return (title, (len(snip)*count)/len(code))

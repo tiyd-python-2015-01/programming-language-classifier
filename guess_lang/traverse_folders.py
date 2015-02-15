@@ -19,23 +19,25 @@ VALID_EXTENSIONS = ['.clojure', '.hs', '.lhs', '.ghc', '.java',
 LANGUAGE_DICT = {'Clojure': ['.clojure'],
                  'Haskell': ['.hs', '.lhs', '.ghc'],
                  'Java': ['.java', '.class', '.jar'],
-                 'JavaScript': ['.js','.javascript'],
+                 'JavaScript': ['.js', '.javascript'],
                  'OCaml': ['.ocaml'],
                  'Perl': ['.pl', '.pm', '.t', '.pod', '.perl'],
                  'PHP': ['.php', '.phtml', '.php3', '.php4', '.php5', '.phps'],
                  'Python': ['.py', '.pyw', '.pyc', '.pyo', '.pyd',
-                            '.python', '.python2','.python3'],
+                            '.python', '.python2', '.python3'],
                  'Ruby': ['.rb', '.rbw', '.ruby', '.jruby'],
                  'Scala': ['.scala'],
                  'Scheme': ['.scm', '.ss'],
                  'Tcl': ['.tcl']}
 
+
 def build_train_set(folder_path):
-    """ Builds a list of file paths for files with the acceptable extension. """
+    """ Builds a list of file paths for
+    files with the acceptable extension. """
     training_code = []
     for directory, subdirs, files in os.walk(folder_path):
         for file in files:
-            extension = re.search(r'.(\w+)$',file).group(0)
+            extension = re.search(r'.(\w+)$', file).group(0)
             if extension and extension in VALID_EXTENSIONS:
                 filepath = str(directory) + "/" + str(file)
                 """ It doesn't seem like a best possible practice to use a
@@ -46,8 +48,9 @@ def build_train_set(folder_path):
                     if extension in values:
                         language = key
                         break
-                training_code.append((filepath,language))
+                training_code.append((filepath, language))
     return training_code
+
 
 def build_test_set(folder_path):
     testing_code = []
@@ -57,8 +60,9 @@ def build_test_set(folder_path):
         for file in files:
             filepath = str(directory) + str(file)
             test_number = int(file)
-            testing_code.append((test_number,filepath))
+            testing_code.append((test_number, filepath))
     return testing_code
+
 
 def get_answers(answer_path):
     df = pd.read_csv(answer_path)

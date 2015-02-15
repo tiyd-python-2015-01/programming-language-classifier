@@ -7,10 +7,9 @@ from classifier import Classifier
 from sklearn.cluster import KMeans
 
 
-
 if __name__ == '__main__':
     training_path = "guess_lang/data/"
-    testing_path = "guess_lang/final-test/"
+    testing_path = "guess_lang/test/"
     single_file = False
     use_pickle = True
 
@@ -31,10 +30,9 @@ if __name__ == '__main__':
         training_set = tf.build_train_set(training_path)
         learner = Learner()
         """ Build the DataFrame of features"""
-        for code,language in training_set:
+        for code, language in training_set:
             learner.train(code, language)
         """ Read in files to use as testing data. """
-
 
     classifier_path = "classifier.data"
     if os.path.isfile(classifier_path) and use_pickle:
@@ -46,8 +44,7 @@ if __name__ == '__main__':
 
     testing_set = tf.build_test_set(testing_path)
     answers = tf.get_answers("guess_lang/test.csv")
-    testing_set = sorted(testing_set, key = lambda x: x[0])
-
+    testing_set = sorted(testing_set, key=lambda x: x[0])
 
     # print("Decision Tree")
     # correct = 0
@@ -59,10 +56,9 @@ if __name__ == '__main__':
     #     #print(test_number, ": ", decision)
     # print("Score: {}".format(correct/32))
 
-
     print("Random Forest")
     correct = 0
-    for test_number,test in testing_set:
+    for test_number, test in testing_set:
         analysis = learner.analyze(test)
         decision = classifier.random_forest(analysis)[0].lower()
         if decision == (answers[test_number]):
@@ -70,13 +66,14 @@ if __name__ == '__main__':
         if single_file:
             print(test_number, ": ", decision)
         else:
-            print(test_number, ": ", decision, "\tCorrect: ",answers[test_number])
+            print(test_number, ": ", decision,
+                  "\tCorrect: ", answers[test_number])
     if not single_file:
         print("Score: {}".format(correct/32))
 
     print("Extremely Random Forest")
     correct = 0
-    for test_number,test in testing_set:
+    for test_number, test in testing_set:
         analysis = learner.analyze(test)
         decision = classifier.extreme_random_forest(analysis)[0].lower()
         if decision == (answers[test_number]):
@@ -84,7 +81,8 @@ if __name__ == '__main__':
         if single_file:
             print(test_number, ": ", decision)
         else:
-            print(test_number, ": ", decision, "\tCorrect: ",answers[test_number])
+            print(test_number, ": ", decision,
+                  "\tCorrect: ", answers[test_number])
     if not single_file:
         print("Score: {}".format(correct/32))
 
@@ -107,6 +105,7 @@ if __name__ == '__main__':
     #         correct += 1
     #     #print(test_number, ": ", decision)
     # print("Score: {}".format(correct/32))
+
     if not os.path.isfile(learner_path):
         output = open(learner_path, 'wb')
         pickle.dump(learner, output, protocol=2)
