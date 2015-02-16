@@ -1,0 +1,1 @@
+var files =  % w (                 a. txt                 b. txt                 c. txt                ) ;   files. map { . toFile } . each   {   | file |     say file. edit   {   | line |         line. gsub ( "Goodbye London!" ,  "Hello New York!" ) ;      } ; }
