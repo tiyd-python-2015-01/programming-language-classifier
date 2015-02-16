@@ -100,3 +100,5 @@ You may want to add some command-line flags to your program. You could allow peo
 * [Rosetta Code](http://rosettacode.org/wiki/Rosetta_Code)
 * [Working with Text Files](https://opentechschool.github.io/python-data-intro/core/text-files.html)
 
+## Attribution
+This project uses the basic neural network from Michael Nielsen's book [Neural Networks and Deep Learning](Neural Networks and Deep Learning), with some minor adaptations to work with Python 3.
