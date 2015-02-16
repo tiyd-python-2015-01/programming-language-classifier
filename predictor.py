@@ -4,7 +4,7 @@ import pickle
 import parser
 
 
-def load_classifier(test_file="random_forest.dat", key="key.txt"):
+def load_classifier(test_file="random_forest.dat"):
     with open(test_file, "rb") as saved_classifier:
         classifier = pickle.load(saved_classifier)
     return classifier

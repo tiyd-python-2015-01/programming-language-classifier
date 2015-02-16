@@ -18,7 +18,7 @@ def split_into_lines(source_text):
 
 
 def identify_comment_type(source_lines):
-    comment_types = [r"\w*/\*+", r"\w*\(\*+", r"\w*;;+", r"\w*//+",
+    comment_types = [r"\w*/\*+", r"\w*\(\*+", r"{-", r"\w*;;+", r"\w*//+",
                      r"\w*--+", r"\w*\#+"]
 
     for line in source_lines:
@@ -29,8 +29,8 @@ def identify_comment_type(source_lines):
 
 
 def identify_comment_blocks(c_type, source_lines):
-    block_start = [r"\w*/\*+", r"\w*\(\*+"]
-    block_stop = [r"\*+/", r"\*+\)"]
+    block_start = [r"\w*/\*+", r"\w*\(\*+", r"\w*{-"]
+    block_stop = [r"\*+/", r"\*+\)", r"-}"]
     in_block = False
     to_remove = []
 
@@ -42,18 +42,19 @@ def identify_comment_blocks(c_type, source_lines):
             to_remove.append(line)
         elif re.match(block_start[c_type], line):
             to_remove.append(line)
-            in_block = True
+            if not re.search(block_stop[c_type], line):
+                in_block = True
     return to_remove
 
 
 def strip_comments(c_type, source_lines):
-    comment_types = [r"/\*+", r"\(\*+", r";;+", r"//+", r"--+", r"\#+"]
+    comment_types = [r"/\*+", r"\(\*+", r"{-", r";;+", r"//+", r"--+", r"\#+"]
     items_to_remove = []
 
     if c_type == 0 or c_type == 1:
         items_to_remove.extend(identify_comment_blocks(c_type, source_lines))
     if c_type == 0:
-        c_type = 3
+        c_type = 4
     if c_type >= 3:
         for line in source_lines:
             if re.match(comment_types[c_type], line):
@@ -76,7 +77,7 @@ def remove_items(items, source_lines):
 
 
 def strip_inline_comments(c_type, source_lines):
-    comment_types = [r"/\*+", r"\(\*+", r";;+", r"//+", r"--+", r"\#+"]
+    comment_types = [r"/\*+", r"\(\*+", r"{-", r";;+", r"//+", r"--+", r"\#+"]
     stripped_lines = []
     for line in source_lines:
         if re.search(comment_types[c_type], line):
@@ -117,6 +118,12 @@ def count_braces(source_list, length_of_source):
     return total_count / length_of_source
 
 
+def count_brackets(source_list, length_of_source):
+    source_text = "\n".join(source_list)
+    total_count = source_text.count("[") + source_text.count("]")
+    return total_count / length_of_source
+
+
 def count_double_colons(source_list, length_of_source):
     source_text = "\n".join(source_list)
     total_count = source_text.count("::")
@@ -125,13 +132,13 @@ def count_double_colons(source_list, length_of_source):
 
 def count_semi_colons(source_list, length_of_source):
     source_text = "\n".join(source_list)
-    total_count = source_text.count(";")
+    total_count = source_text.count(";\n")
     return total_count / length_of_source
 
 
 def count_dollar_signs(source_list, length_of_source):
     source_text = "\n".join(source_list)
-    total_count = source_text.count("$")
+    total_count = len(re.findall(r"\$\w+", source_text))
     return total_count / length_of_source
 
 
@@ -221,6 +228,94 @@ def check_for_public(source_list):
         return 0
 
 
+def check_def_method(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("defn") > -1:
+        return 1
+    elif source_text.find("function") > -1:
+        return 2
+    elif source_text.find("define") > -1:
+        return 3
+    elif source_text.find("def") > -1:
+        return 4
+    elif source_text.find("let") > -1:
+        return 5
+    elif source_text.find("proc") > -1:
+        return 6
+    else:
+        return -1
+
+
+def check_for_end(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("end") > -1:
+        return 1
+    else:
+        return 0
+
+
+def check_for_static(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("static") > -1:
+        return 1
+    else:
+        return 0
+
+
+def check_for_colon_word(source_list):
+    source_text = "\n".join(source_list)
+    if re.search(r":\w+", source_text):
+        return 1
+    else:
+        return 0
+
+
+def check_for_type(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("type") > -1:
+        return 1
+    else:
+        return 0
+
+
+def count_bol_parentheses(source_list, length_of_source):
+    total_count = 0
+    for item in source_list:
+        if re.match(r"\(", item):
+            total_count += 1
+    return total_count / length_of_source
+
+
+def check_for_val(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("val") > -1:
+        return 1
+    else:
+        return 0
+
+
+def check_for_where(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("where") > -1:
+        return 1
+    else:
+        return 0
+
+
+def check_for_module(source_list):
+    source_text = "\n".join(source_list)
+    if source_text.find("module") > -1:
+        return 1
+    else:
+        return 0
+
+
+def count_arrows(source_list, length_of_source):
+    source_text = "\n".join(source_list)
+    total_count = source_text.count("<") + source_text.count(">")
+    return total_count / length_of_source
+
+
 def parse_and_score(file_location):
     scores = []
     source_text = read_file(file_location)
@@ -233,6 +328,7 @@ def parse_and_score(file_location):
     parentheses_proportion = count_parentheses(listed_source_text,
                                                source_length)
     curly_brace_proportion = count_braces(listed_source_text, source_length)
+    bracket_proportion = count_brackets(listed_source_text, source_length)
     double_colon_proportion = count_double_colons(listed_source_text,
                                                   source_length)
     semi_colon_proportion = count_semi_colons(listed_source_text,
@@ -254,11 +350,22 @@ def parse_and_score(file_location):
     contains_equals_arrow = check_equals_arrow(listed_source_text)
     contains_word_function = check_for_function(listed_source_text)
     contains_word_public = check_for_public(listed_source_text)
+    def_method = check_def_method(listed_source_text)
+    contains_end = check_for_end(listed_source_text)
+    contains_static = check_for_static(listed_source_text)
+    colon_word = check_for_colon_word(listed_source_text)
+    contains_type = check_for_type(listed_source_text)
+    bol_parentheses = count_bol_parentheses(listed_source_text, source_length)
+    contains_val = check_for_val(listed_source_text)
+    contains_where = check_for_where(listed_source_text)
+    contains_module = check_for_module(listed_source_text)
+    arrows_proportion = count_arrows(listed_source_text, source_length)
 
     scores.append(comment_style)
     scores.append(print_style)
     scores.append(parentheses_proportion)
     scores.append(curly_brace_proportion)
+    scores.append(bracket_proportion)
     scores.append(double_colon_proportion)
     scores.append(semi_colon_proportion)
     scores.append(dollar_sign_proportion)
@@ -274,5 +381,15 @@ def parse_and_score(file_location):
     scores.append(contains_equals_arrow)
     scores.append(contains_word_function)
     scores.append(contains_word_public)
+    scores.append(def_method)
+    scores.append(contains_end)
+    scores.append(contains_static)
+    scores.append(colon_word)
+    scores.append(contains_type)
+    scores.append(bol_parentheses)
+    scores.append(contains_val)
+    scores.append(contains_where)
+    scores.append(contains_module)
+    scores.append(arrows_proportion)
 
     return np.array(scores)
