@@ -21,8 +21,6 @@ def make_temp_df(text):
 
 def present_percent(probs):
     probs = probs.tolist()
-    print(type(probs))
-    print(probs)
     langs =["clojure", "haskell", "java", "javascript", "ocaml", "perl",
             "php", "python", "ruby", "scala", "scheme"]
     prob_dict = {}
@@ -35,17 +33,19 @@ def present_percent(probs):
     print("Most likely languages...\n", "{}".format(top_three))
 
 
-if __name__ == '__main__':
-    test_file = sys.argv[1]
+def make_prediction(test_file):
     text_list = []
     with open(test_file) as test_file:
         text = test_file.read()
         text_list.append(text)
     temp_df = make_temp_df(text_list)
-    print(temp_df)
     file = open("language_detector.pkl",'rb')
     classifier = pickle.load(file)
     prediction = classifier.predict(temp_df.loc[0::,'Object':"php"])
     probability = classifier.predict_proba(temp_df.loc[0::,'Object':"php"])
-    print(prediction)
+    print("I predict the language is: {}".format(prediction[0]))
     present_percent(probability)
+
+if __name__ == '__main__':
+    test_file = sys.argv[1]
+    make_prediction(test_file)

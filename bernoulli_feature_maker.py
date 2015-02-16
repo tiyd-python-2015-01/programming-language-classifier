@@ -2,7 +2,7 @@ import pandas as pd
 import re
 
 
-def find_percent_word(feature_list, dataframe):
+def find_word(feature_list, dataframe):
     for feature in feature_list:
         def temp_fn(word_list):
             for word in word_list:
@@ -12,7 +12,7 @@ def find_percent_word(feature_list, dataframe):
         dataframe[feature] = dataframe["Textblob"].apply(temp_fn)
 
 
-def find_percent_character(feature_list, dataframe):
+def find_character(feature_list, dataframe):
     for feature in feature_list:
         def temp_fn(character_list):
             for character in character_list:
@@ -22,7 +22,7 @@ def find_percent_character(feature_list, dataframe):
         dataframe[feature] = dataframe["Textblob letters"].apply(temp_fn)
 
 
-def find_percent_special_chars(special_chars, dataframe):
+def find_special_chars(special_chars, dataframe):
     for feature in special_chars:
         def temp_fn(text):
             counter = len(re.findall(feature, text))
@@ -41,6 +41,6 @@ def b_add_to_df(dataframe):
                    "data", "move", "where"]
     common_chars = ["!", "(", ")", ";", ":", "$", "@","[", "]", "|", "{", "}"]
     special_chars = ["=>", "->", "php"]
-    find_percent_word(common_words, dataframe)
-    find_percent_character(common_chars, dataframe)
-    find_percent_special_chars(special_chars, dataframe)
+    find_word(common_words, dataframe)
+    find_character(common_chars, dataframe)
+    find_special_chars(special_chars, dataframe)

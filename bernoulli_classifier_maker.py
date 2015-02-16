@@ -5,7 +5,7 @@ from bernoulli_feature_maker import b_add_to_df
 import pickle
 
 
-def gaussian_classifier():
+def bernoulli_classifier():
     df = get_corpus("training/benchmarks/benchmarksgame/bench/")
     b_add_to_df(df)
     classifier = BernoulliNB()
@@ -17,5 +17,5 @@ def pickle_classifier(item):
         pickle.dump(classifier, fout)
 
 if __name__ == '__main__':
-    classifier = gaussian_classifier()
+    classifier = bernoulli_classifier()
     pickle_classifier(classifier)
