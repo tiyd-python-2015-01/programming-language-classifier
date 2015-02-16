@@ -67,8 +67,8 @@ feature_list = [('parent_count', "[()]"),
                 ('val_exists', r"\bval\b"),
                 ('else_if', r"(else if)"),
                 ('elif', r"(elif)"),
-                ('elif', r"(print )"),
-                ('elif', r"(print\()"),
+                ('print_space', r"(print )"),
+                ('pyth_print', r"(print\()"),
                 ('void', r"(void)")]
 
 
