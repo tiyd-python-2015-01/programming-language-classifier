@@ -58,7 +58,7 @@ def get_language(ext):
 
 
 def read_train_data():
-    files = read_files("./rosetta")
+    files = read_files("../rosetta")
     main_list = []
     for file in files:
         ext = get_extension(file)

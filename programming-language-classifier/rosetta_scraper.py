@@ -34,7 +34,7 @@ for lang, ext in languages:
             for item in data:
                for tag in item.contents:
                     tag.br.replace_with("\n")
-            with open("./rosetta/file{}.{}".format(i,ext), "w") as text_file:
+            with open("../rosetta/file{}.{}".format(i,ext), "w") as text_file:
                 text_file.write(item.get_text(" "))
                 i +=1
         except:

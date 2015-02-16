@@ -13,7 +13,7 @@ import lang_orig as lg
 
 
 def read_test_data():
-    files = lg.read_files("./test")
+    files = lg.read_files("../test")
     main_list = []
     for file in files:
             with open(file, errors="surrogateescape") as in_file:
@@ -21,7 +21,7 @@ def read_test_data():
             file_name = re.findall(r'\d+', file)
             main_list.append([texto, file_name[0]])
     file_content = pd.DataFrame(main_list, columns=['Code', 'Filename'])
-    file_info = pd.read_csv('./test.csv', dtype={'Filename': str, 'Language': str})
+    file_info = pd.read_csv('../test.csv', dtype={'Filename': str, 'Language': str})
     datadf = pd.merge(file_info, file_content, on=['Filename'])
     del datadf['Filename']
     return datadf
