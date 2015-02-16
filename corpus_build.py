@@ -64,7 +64,12 @@ feature_list = [('parent_count', "[()]"),
                 ('var_exists', r"\bvar\b"),
                 ('star_count', r"\b\*\b"),
                 ('dollar_sign', r"\$"),
-                ('val_exists', r"\bval\b")]
+                ('val_exists', r"\bval\b"),
+                ('else_if', r"(else if)"),
+                ('elif', r"(elif)"),
+                ('elif', r"(print )"),
+                ('elif', r"(print\()"),
+                ('void', r"(void)")]
 
 
 class Corpus():
