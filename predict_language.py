@@ -10,13 +10,14 @@ import sys
 import pickle
 
 
-
 def make_temp_df(text):
+    """Creates a basic temporary Dataframe."""
     temp_df = pd.DataFrame({"Text": text})
     temp_df["Textblob"] = temp_df.Text.apply((lambda x: TextBlob(x).words))
     temp_df["Textblob letters"] = temp_df.Text.apply((lambda x: TextBlob(x)))
     b_add_to_df(temp_df)
     return temp_df
+
 
 def present_percent(probs):
     probs = probs.tolist()
@@ -46,8 +47,5 @@ if __name__ == '__main__':
     classifier = pickle.load(file)
     prediction = classifier.predict(temp_df.loc[0::,'Object':"php"])
     probability = classifier.predict_proba(temp_df.loc[0::,'Object':"php"])
-    # print(metrics.classification_report(test_df.loc[0::,"Language"], predictions))
-    # print(metrics.confusion_matrix(test_df.loc[0::,"Language"], predictions))
-    # print(metrics.f1_score(test_df.loc[0::,"L
     print(prediction)
     present_percent(probability)

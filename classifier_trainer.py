@@ -10,9 +10,12 @@ def gaussian_classifier():
     add_to_df(df)
     classifier = GaussianNB()
     classifier = classifier.fit(df.loc[0::,'Object':"php"], df.loc[0::,"Language"])
+    return classifier
+
+def pickle_classifier(item):
     with open('language_detector.pkl', 'wb') as fout:
         pickle.dump(classifier, fout)
 
-
 if __name__ == '__main__':
-    gaussian_classifier()
+    classifier = gaussian_classifier()
+    pickle_classifier(classifier)
