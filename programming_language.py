@@ -12,7 +12,6 @@ ext_dict = {'clojure': ['.clj', '.clojure'],
             'scheme': ['.scm', '.racket', '.ss'],
             'scala': ['.scala'],
             'tcl': ['.tcl'],
-            'perl': ['.perl'],
             'php': ['.php'],
             'ruby': ['.rb', '.ruby', '.jruby'],
             'python': ['.python3', '.python2', '.py']
