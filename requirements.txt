@@ -1,2 +1,6 @@
 scikit-learn
 textblob
+re
+os
+numpy
+pandas

@@ -1,0 +1,11 @@
+with open("/Users/chameleonsrock/ironyard/sandbox"
+           "/programming-language-classifier/"
+           "rf_programming.dat", "rb") as file:
+    classifier = pickle.load(file)
+
+
+def get_language(snippet_path):
+    """Opens a file, parses it, then applies a trained classifier to return
+       the predicted language."""
+    snippet = open_and_parse_single(snippet_path)
+    return classifier.predict(snippet)
