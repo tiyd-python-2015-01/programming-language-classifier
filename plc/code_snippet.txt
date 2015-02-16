@@ -1,26 +1,14 @@
-class Utils
+module BinarySearch where
 
-  def self.seconds_to_string(s)
+a :: [Int]
+a = [6, 13, 14, 25, 33, 43, 51, 53, 64, 72, 84, 93, 95, 96, 97]
 
-    # d = days, h = hours, m = minutes, s = seconds
-    m = (s / 60).floor
-    s = s % 60
-    h = (m / 60).floor
-    m = m % 60
-    d = (h / 24).floor
-    h = h % 24
-
-    output = "#{s} second#{Utils.pluralize(s)}" if (s > 0)
-    output = "#{m} minute#{Utils.pluralize(m)}, #{s} second#{Utils.pluralize(s)}" if (m > 0)
-    output = "#{h} hour#{Utils.pluralize(h)}, #{m} minute#{Utils.pluralize(m)}, #{s} second#{Utils.pluralize(s)}" if (h > 0)
-    output = "#{d} day#{Utils.pluralize(d)}, #{h} hour#{Utils.pluralize(h)}, #{m} minute#{Utils.pluralize(m)}, #{s} second#{Utils.pluralize(s)}" if (d > 0)
-
-    return output
-  end
-
-  def self.pluralize number
-    return "s" unless number == 1
-    return ""
-  end
-
-end
+bsearch :: Int -> [Int] -> Int
+bsearch _   [] = -1
+bsearch key xs
+    | key < val = bsearch key (take (mid-1) xs)
+    | key > val = bsearch key (drop (mid+1) xs)
+    | otherwise = val
+  where
+    mid = floor ((fromIntegral $ (length xs) - 1) / 2)
+    val = xs !! mid
