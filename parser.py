@@ -18,6 +18,8 @@ def split_into_lines(source_text):
 
 
 def identify_comment_type(source_lines):
+    """Identifies the symbols used to denote comments in the supplied
+    source file"""
     comment_types = [r"\w*/\*+", r"\w*\(\*+", r"{-", r"\w*;;+", r"\w*//+",
                      r"\w*--+", r"\w*\#+"]
 
@@ -29,16 +31,17 @@ def identify_comment_type(source_lines):
 
 
 def identify_comment_blocks(c_type, source_lines):
+    """Identifies block comments and creates a list of them for removal"""
     block_start = [r"\w*/\*+", r"\w*\(\*+", r"\w*{-"]
     block_stop = [r"\*+/", r"\*+\)", r"-}"]
     in_block = False
     to_remove = []
 
     for line in source_lines:
-        if in_block == True and re.search(block_stop[c_type], line):
+        if in_block and re.search(block_stop[c_type], line):
             to_remove.append(line)
             in_block = False
-        elif in_block == True:
+        elif in_block:
             to_remove.append(line)
         elif re.match(block_start[c_type], line):
             to_remove.append(line)
@@ -48,6 +51,7 @@ def identify_comment_blocks(c_type, source_lines):
 
 
 def strip_comments(c_type, source_lines):
+    """Identifies and strips comments from the supplied source file"""
     comment_types = [r"/\*+", r"\(\*+", r"{-", r";;+", r"//+", r"--+", r"\#+"]
     items_to_remove = []
 
@@ -68,6 +72,7 @@ def strip_comments(c_type, source_lines):
 
 
 def remove_items(items, source_lines):
+    """Removes the lines identified by the comment identifier"""
     for item in items:
         try:
             source_lines.remove(item)
@@ -77,6 +82,7 @@ def remove_items(items, source_lines):
 
 
 def strip_inline_comments(c_type, source_lines):
+    """Attempts to find inline comments in the source file and removes them"""
     comment_types = [r"/\*+", r"\(\*+", r"{-", r";;+", r"//+", r"--+", r"\#+"]
     stripped_lines = []
     for line in source_lines:
@@ -86,6 +92,8 @@ def strip_inline_comments(c_type, source_lines):
         else:
             stripped_lines.append(line)
     return stripped_lines
+
+"""Functions below are feature examinations of the source file"""
 
 
 def count_characters(source_lines):

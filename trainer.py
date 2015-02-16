@@ -10,6 +10,8 @@ import parser
 
 
 def create_training_data():
+    """Creates training data list and results list corresponding to the
+    data list for training the classifier."""
     data_directory = "train_files/"
 
     filetype_dict = create_filetype_dict()
@@ -30,6 +32,8 @@ def create_training_data():
 
 
 def create_filetype_dict():
+    """Read in file containing all known file extensions and their language
+    and create a dictionary for lookup"""
     with open("train_files/extension_dict.txt") as filetype:
         filetype_data = filetype.readlines()
     filetype_list = []
@@ -51,12 +55,14 @@ def split_data(data, results, test_size):
 
 
 def train_learner(train_data, train_results):
+    """Fit the classifier to the training data."""
     learner = RandomForestClassifier(n_estimators=100, random_state=0)
     learner.fit(train_data, train_results)
     return learner
 
 
 def test_learner(learner, test_data, test_results):
+    """Test the classifier against the test data"""
     prediction = learner.predict(test_data)
     print(classification_report(test_results, prediction))
     print(confusion_matrix(test_results, prediction))
@@ -64,6 +70,7 @@ def test_learner(learner, test_data, test_results):
 
 
 def export_forest(forest):
+    """Save the classifer as a pickle file for use in the predictor."""
     with open("random_forest.dat", "wb") as file:
         pickle.dump(max_train, file)
 
