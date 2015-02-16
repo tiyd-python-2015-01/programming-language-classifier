@@ -1,3 +1,26 @@
+There are 5 python files:
+
+1- rosetta_scraper.py:  scrapes rosetta's web site for 60 examples of
+code for each of the languages in this analysis
+
+2- lang_orig.py: This is the code used to train the model and to select the model with best performance. The best performance was found to be
+a decision tree with 160 features (representing the proportion of occurrence for the most used words including punctuation in the code)
+
+3- classify.py: Tests the selected model with the new files provided. The model predicts the code correctly approx. 80% of the time.
+
+4- classify_snippets.py: This file expects to receive the name of a file as argument and then prints the predicted language as well as the
+probabilities for each language.
+
+5- Model_Demonstration.ipynb shows how the model is used to predict the language for a given piece of code.
+
+There are 2 objects saved with pickle: the model and the final features for the model.
+
+
+
+
+
+
+****************************************************
 # Classify code snippets into programming languages
 
 ## Description
@@ -99,4 +122,3 @@ You may want to add some command-line flags to your program. You could allow peo
 * [Beautiful Soup](http://www.crummy.com/software/BeautifulSoup/)
 * [Rosetta Code](http://rosettacode.org/wiki/Rosetta_Code)
 * [Working with Text Files](https://opentechschool.github.io/python-data-intro/core/text-files.html)
-
