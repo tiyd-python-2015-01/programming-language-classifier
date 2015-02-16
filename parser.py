@@ -316,6 +316,20 @@ def count_arrows(source_list, length_of_source):
     return total_count / length_of_source
 
 
+def check_assignment(source_list):
+    source_text = "\n".join(source_list)
+    if len(re.findall(r"\$\w+->\w+", source_text)):
+        return 1
+    else:
+        return 0
+
+
+def count_carets(source_list, length_of_source):
+    source_text = "\n".join(source_list)
+    total_count = source_text.count("^")
+    return total_count / length_of_source
+
+
 def parse_and_score(file_location):
     scores = []
     source_text = read_file(file_location)
@@ -360,6 +374,8 @@ def parse_and_score(file_location):
     contains_where = check_for_where(listed_source_text)
     contains_module = check_for_module(listed_source_text)
     arrows_proportion = count_arrows(listed_source_text, source_length)
+    php_assignment = check_assignment(listed_source_text)
+    caret_count = count_carets(listed_source_text, source_length)
 
     scores.append(comment_style)
     scores.append(print_style)
@@ -391,5 +407,7 @@ def parse_and_score(file_location):
     scores.append(contains_where)
     scores.append(contains_module)
     scores.append(arrows_proportion)
+    scores.append(php_assignment)
+    scores.append(caret_count)
 
     return np.array(scores)
