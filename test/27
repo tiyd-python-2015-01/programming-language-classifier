@@ -1,20 +1,9 @@
-proc twitter::follow {nick uhost hand chan argv} {
-	if {![channel get $chan twitter]} { return }
-
-	if {[string length $argv] < 1} {
-		$twitter::output_cmd "PRIVMSG $chan :Usage: !follow <screen name>"
-		return
-	}
-
-	if {[catch {::twitlib::query $::twitlib::follow_url [list screen_name $argv]} result]} {
-		$twitter::output_cmd "PRIVMSG $chan :Twitter failed or already friends with $argv!"
-		return
-	}
-
-	if {[dict exists $result error]} {
-		twitter::output $chan "Follow failed ($argv): [dict get $result error]"
-		return
-	}
-
-	twitter::output $chan "Now following [dict get $result screen_name]!"
-}
+    public function formatLocalized($format)
+    {
+        // Check for Windows to find and replace the %e
+        // modifier correctly
+        if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+             $format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
+        }
+        return strftime($format, strtotime($this));
+    }

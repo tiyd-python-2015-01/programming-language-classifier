@@ -2,7 +2,6 @@ import pandas as pd
 import re
 
 
-
 def find_percent_word(feature_list, dataframe):
     for feature in feature_list:
         def temp_fn(word_list):

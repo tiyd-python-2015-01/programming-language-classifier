@@ -1,8 +1,4 @@
-from classifier_trainer import gaussian_classifier
 from bernoulli_feature_maker import b_add_to_df
-from get_test_df import get_tests
-from feature_maker import add_to_df
-from sklearn import metrics
 from textblob import TextBlob
 from collections import Counter
 import pandas as pd
@@ -21,8 +17,8 @@ def make_temp_df(text):
 
 def present_percent(probs):
     probs = probs.tolist()
-    langs =["clojure", "haskell", "java", "javascript", "ocaml", "perl",
-            "php", "python", "ruby", "scala", "scheme"]
+    langs =["Clojure", "Haskell", "Java", "JavaScript", "Ocaml", "Perl",
+            "Php", "Python", "Ruby", "Scala", "Scheme"]
     prob_dict = {}
     counter = 0
     for prob in probs[0]:
@@ -30,7 +26,13 @@ def present_percent(probs):
         counter += 1
     sorted_dict = Counter(prob_dict)
     top_three = sorted_dict.most_common(3)
-    print("Most likely languages...\n", "{}".format(top_three))
+    first_lang, first_num = top_three[0]
+    second_lang, second_num = second = top_three[1]
+    third_lang, third_num = top_three[2]
+    print("Most likely languages...\n",
+          "1.{}: {}%\n".format(first_lang, round(first_num, 3) * 100),
+          "2.{}: {}%\n".format(second_lang, round(second_num, 3) * 100),
+          "3.{}: {}%".format(third_lang, round(third_num, 3) * 100))
 
 
 def make_prediction(test_file):

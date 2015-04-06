@@ -10,9 +10,10 @@ def get_tests(dir_path):
     ext_list = []
     for subdir, dirs, files in os.walk(dir_path):
         for name in files:
-            with open(os.path.join(subdir, name), errors="surrogateescape") as f:
-                text_list.append(f.read())
-            ext_list.append(name)
+            if not name.startswith('.'):
+                with open(os.path.join(subdir, name), errors="surrogateescape") as f:
+                    text_list.append(f.read())
+                ext_list.append(name)
 
     test_df = pd.DataFrame({"File number": ext_list, "Text": text_list})
     test_df["Textblob"] = test_df.Text.apply((lambda x: TextBlob(x).words))
