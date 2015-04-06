@@ -8,7 +8,11 @@ Created a classifier that can take snippets of code and guess the programming la
 
 Run prediction.py and a file as a command line argument to get a prediction of what kind of file it is
 
-ex: prediction.py other_code.txt
+ex: predictor.py other_code.txt
+
+The test folder contains files with different programming languages
+
+ex: predictor.py test/1
 
 ## Other
 
