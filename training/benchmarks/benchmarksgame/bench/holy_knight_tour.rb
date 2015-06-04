@@ -1,0 +1,1 @@
+require 'HLPsolver' ADJACENT = [[-1,-2],[-2,-1],[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2]] boardy = <<EOS. . 0 0 0. . 0 . 0 0. 0 0 0 0 0 0 00 0 0 . . 0 . 00 . 0 . . 0 0 01 0 0 0 0 0 0. . 0 0 . 0. . . 0 0 0EOSt0 = Time.nowHLPsolver.new(boardy).solveputs " #{Time.now - t0} sec"

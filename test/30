@@ -1,61 +1,15 @@
-class Application extends App {
-	/**
-	 * @param array $urlParams
-	 */
-	public function __construct(array $urlParams=array()){
-		parent::__construct('core', $urlParams);
-		$container = $this->getContainer();
-		/**
-		 * Controllers
-		 */
-		$container->registerService('LostController', function(SimpleContainer $c) {
-			return new LostController(
-				$c->query('AppName'),
-				$c->query('Request'),
-				$c->query('URLGenerator'),
-				$c->query('UserManager'),
-				$c->query('Defaults'),
-				$c->query('L10N'),
-				$c->query('Config'),
-				$c->query('SecureRandom'),
-				$c->query('DefaultEmailAddress'),
-				$c->query('IsEncryptionEnabled')
-			);
-		});
-		$container->registerService('UserController', function(SimpleContainer $c) {
-			return new UserController(
-				$c->query('AppName'),
-				$c->query('Request'),
-				$c->query('UserManager'),
-				$c->query('Defaults')
-			);
-		});
-		/**
-		 * Core class wrappers
-		 */
-		$container->registerService('IsEncryptionEnabled', function() {
-			return \OC_App::isEnabled('files_encryption');
-		});
-		$container->registerService('URLGenerator', function(SimpleContainer $c) {
-			return $c->query('ServerContainer')->getURLGenerator();
-		});
-		$container->registerService('UserManager', function(SimpleContainer $c) {
-			return $c->query('ServerContainer')->getUserManager();
-		});
-		$container->registerService('Config', function(SimpleContainer $c) {
-			return $c->query('ServerContainer')->getConfig();
-		});
-		$container->registerService('L10N', function(SimpleContainer $c) {
-			return $c->query('ServerContainer')->getL10N('core');
-		});
-		$container->registerService('SecureRandom', function(SimpleContainer $c) {
-			return $c->query('ServerContainer')->getSecureRandom();
-		});
-		$container->registerService('Defaults', function() {
-			return new \OC_Defaults;
-		});
-		$container->registerService('DefaultEmailAddress', function() {
-			return Util::getDefaultEmailAddress('lostpassword-noreply');
-		});
-	}
-}
+let search_compiler_libs () =
+  prerr_endline "I: Searching for OCaml compiler libraries";
+  let stdlib = BaseEnv.var_get "standard_library" in
+  let ( / ) = Filename.concat in
+  try
+    List.find (fun path -> Sys.file_exists (path / "types.cmi") || Sys.file_exists (path / "typing" / "types.cmi")) [
+      stdlib;
+      stdlib / "compiler-libs";
+      stdlib / "compiler-lib";
+      stdlib / ".." / "compiler-libs";
+      stdlib / ".." / "compiler-lib";
+    ]
+  with Not_found ->
+    prerr_endline "E: Cannot find compiler libraries! See the README for details.";
+    exit 1
